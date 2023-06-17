@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>{{ title }}</title>
+    
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/cheatsheet/">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.min.css">
+
+    <style>
+      
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .col-feat-wrapper {
+
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="cheatsheet.css" rel="stylesheet">
+  </head>
+  <body class="bg-light">
+    
+<header class="bd-header bg-dark py-3 mb-3 d-flex align-items-stretch border-bottom border-dark">
+  <div class="container-fluid d-flex align-items-center">
+    <h1 class="d-flex align-items-center fs-3 text-white mb-0">
+	    <!--      <img src="mindset.png" width="38" height="30" class="me-3" alt="Bootstrap"> -->
+      Insolver Report
+    </h1>
+  </div>
+</header>
+
+<aside class="bd-aside sticky-xl-top text-muted align-self-start mb-3 mb-xl-5 px-2">
+  <h2 class="h6 pt-4 pb-3 mb-4 border-bottom fs-4">On this page</h2>
+  <ul class="nav flex-column nav-pills mb-auto fs-5">
+    <li class="nav-item">
+			{% for section in sections %}
+				<a class="nav-link fw-bold" href="#{{ section.name }}">
+          {{ section.icon }}
+          {{ section.name }}
+        </a>
+    </li>
+      <li class="nav-item">
+        {% for article in section.articles %}
+          <a class="nav-link" href="#{{ article.name }}">
+            {{ article.icon }}
+            {{ article.name }}
+          </a>
+        {% endfor %}
+      </li>
+			{% endfor %}
+  </ul>
+</aside>
+
+<div class="bd-cheatsheet container-fluid bg-body">
+{% for section in sections %}
+ <section class="p-3 my-3 mx-4 border border-3 rounded-3" id="{{ section.name }}" >
+    <h2 class="sticky-xl-top fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3">{{ section.name }}</h2>
+
+    {% for article in section.articles %}
+      <article class="p-4 my-3 bg-light border rounded-3" id="{{ article.name }}">
+           <!-- Save data for creating charts -->
+          {% if article.name=='Coefficients' %}
+          <meta id="index_Coefficients" data-column ="{{ article.footer['index'] }}">
+          {% endif %}
+          {% if article.name=='Metrics' %}
+          <meta id="meta_lift" data-description="{{ article.footer }}">
+          {% endif %}
+          <!-- Save data for the dataset description -->
+          {% if article.name=='Dataset description' %}
+          <meta id="meta_task" data-description="{{ article.footer['task'] }}">
+          <meta id="meta_type" data-description="{{ article.footer['type'] }}">
+            {% if article.footer['type']=='train_test'  %}
+              <meta id="index_train" data-description="{{ article.footer['index_train'] }}">
+              <meta id="data_train" data-description="{{ article.footer['data_train'] }}">
+              <meta id="index_test" data-description="{{ article.footer['index_test'] }}">
+              <meta id="data_test" data-description="{{ article.footer['data_test'] }}">
+            {% else %}
+              <meta id="index_y" data-description="{{ article.footer['index_y'] }}">
+              <meta id="data_y" data-description="{{ article.footer['data_y'] }}">
+            {% endif %}
+          {% endif %}
+        <!-- Save data for creating charts -->
+        {% if article.name=='Coefficients' %}
+          <meta id="meta_coefs" data-column="{{ article.footer['data'] }}">
+        {% endif %}
+        {% if article.name=='Partial Dependence' %}
+          <meta id="meta_pdp" data-description="{{ article.footer }}">
+        {% endif %}
+        {% if article.name=='SHAP' %}
+          <meta id="meta_shap" data-description="{{ article.footer }}">
+        {% endif %}
+        {% if article.name=='Explain instance' %}
+          <meta id="meta_instance" data-description="{{ article.footer }}">
+        {% endif %}
+        <!-- Save data for the models comparison -->
+        {% if article.name=='Compare on train data' %}
+          <meta id="meta_compare_metrics_train" data-description="{{ article.footer['metrics_chart_train'] }}"> 
+          <meta id="meta_compare_pr_gr_train" data-description="{{ article.footer['predict_gp_train'] }}"> 
+          <meta id="meta_compare_diff_train" data-description="{{ article.footer['diff_train'] }}"> 
+          <meta id="meta_compare_features_train" data-description="{{ article.footer['features_train'] }}"> 
+        {% endif %}
+        {% if article.name=='Compare on test data' %}
+          <meta id="meta_compare_metrics_test" data-description="{{ article.footer['metrics_chart_test'] }}">
+          <meta id="meta_compare_pr_gr_test" data-description="{{ article.footer['predict_gp_test'] }}">  
+          <meta id="meta_compare_diff_test" data-description="{{ article.footer['diff_test'] }}"> 
+          <meta id="meta_compare_features_test" data-description="{{ article.footer['features_test'] }}">  
+        {% endif %}
+
+          <div class="bd-heading align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
+            <h3>{{ article.name }}</h3>
+          </div>
+          <div>
+            <div class="bd-example">
+            <p class="lead">{{ article.header }}</p>
+            </div>
+
+            <div class="bd-example">
+              {% for item in article.parts %}
+                {{ item }}
+              {% endfor %}
+            </div>
+          </div>
+
+      </article>
+    {% endfor %}
+  </section>
+ {% endfor %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+<!-- Colors script -->
+<script>
+  function randomArrayShuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+const CHART_COLORS = [ 'rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)','rgb(140, 255, 255)',
+                       'rgb(145, 195, 230)','rgb(247, 173, 173)', 'rgb(252, 199, 91)', 'rgb(193, 200, 227)', 
+                       'rgb(234, 203, 247)', 'rgb(175, 195, 201)', 'rgb(227, 226, 195)', 'rgb(237, 222, 250)',
+                       'rgb(240, 156, 166)', 'rgb(208, 227, 175)', 'rgb(221, 206, 235)', 'rgb(157, 171, 145)',
+                      ];
+randomArrayShuffle(CHART_COLORS);
+</script>
+
+<!-- Model charts -->
+  <!-- Model.Coefficients charts -->
+<script>
+let coefs_names = ['relative_importance', 'scaled_importance', 'percentage'];
+let colors  = {'relative_importance': ['rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)'],
+              'scaled_importance': ['rgba(75, 192, 192, 0.2)','rgba(75, 192, 192, 1)'],
+              'percentage': ['rgba(153, 102, 255, 0.2)', 'rgba(153, 102, 255, 1)']
+};
+
+var strData = $(`#index_Coefficients`).data('column');
+strData = strData.replace(/'/g, '"');
+var indexData = JSON.parse(strData)
+var columnsData = $(`#meta_coefs`).data('column');
+
+for (let coef_name of coefs_names) {
+  var ctx = document.getElementById(`chart_${coef_name}`).getContext('2d');
+  var column_index = coefs_names.indexOf(coef_name)
+  var myChart = new Chart(ctx, { 
+      type: 'bar',
+      data: {
+          labels: indexData,
+          datasets: [{
+              axis: 'y',
+              label: coef_name,
+              data: columnsData[column_index],
+              backgroundColor: [
+                  colors[coef_name][0],
+              ],
+              borderColor: [
+                  colors[coef_name][1],
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+        indexAxis: 'y',
+      }
+  });
+}
+</script>
+
+  <!-- Model.Metrics charts -->
+<script>
+var footer = JSON.parse($(`#meta_lift`).data('description').replace(/'/g, '"'));
+var graphDivL = document.getElementById(`lift_score`);
+var traceL = []
+for (let data_type of ['train', 'test']){
+  var lift = footer[`${data_type}_lift`];
+  traceL.push({
+          x: lift[0],
+          y: lift[1],
+          mode: 'lines',
+          name: data_type,
+  });
+}
+var layoutL = {
+      xaxis: {title: `% of ${footer[`y_name`]}`}, 
+      yaxis: {title: "Lift"},
+};
+var config = {responsive: true}
+Plotly.newPlot(graphDivL, traceL, layoutL, config);
+
+if(footer['gain']=='true') {
+  var graphDivG = document.getElementById(`gini_score`);
+  var traceG = []
+  for (let data_type of ['train', 'test']){
+    var ideal_gain = footer[`${data_type}_ideal_gain`]
+    var gain = footer[`${data_type}_gain`]
+    traceG.push({
+          x: ideal_gain[0],
+          y: ideal_gain[1],
+          mode: 'lines',
+          name: `ideal ${data_type}, gini=${Math.round(ideal_gain[2]*100)/100}`,
+    });
+    traceG.push({
+          x: gain[0],
+          y: gain[1],
+          mode: 'lines',
+          name: `${data_type}, gini=${Math.round(gain[2]*100)/100}`,
+    });
+  }
+  var layoutG = {
+      xaxis: {title: `Fraction of policyholders`}, 
+      yaxis: {title: "Fraction of total claim amount"},
+  };
+  Plotly.newPlot(graphDivG, traceG, layoutG, config);
+}
+</script>
+
+  <!-- Model.PDP charts -->
+<script>
+var footer = JSON.parse($(`#meta_pdp`).data('description').replace(/'/g, '"'));
+var features = footer['features']
+for (feat of features){
+  var ctx = document.getElementById(`pdp_${feat}`);
+  var feat_index = features.indexOf(feat);
+  var trace1 = {
+    x: footer['pdp_train'][feat_index]['values'],
+    y: footer['pdp_train'][feat_index]['average'],
+    mode: 'lines',
+    name: 'pdp train',
+    visible: true
+    };
+  var trace2 = {
+    x: footer['pdp_test'][feat_index]['values'],
+    y: footer['pdp_test'][feat_index]['average'],
+    mode: 'lines',
+    name: 'pdp test',
+    visible: false
+  };
+  var trace = [trace1, trace2]
+  var layout = {
+      autosize: false,
+      width: 600,
+      height: 700,
+      title: `PDP of ${feat}`, 
+      xaxis: {title: "Value"}, 
+      yaxis: {title: "PDP", range: [-1, 1]},
+      updatemenus: [{
+          y: 1,
+          yanchor: 'top',
+          buttons: [{
+              method: 'restyle',
+              args: ['visible', [true, false]],
+              label: 'train'
+          }, {
+              method: 'restyle',
+              args: ['visible', [false, true]],
+              label: 'test'
+          },]
+      }]
+    };
+
+  Plotly.newPlot(ctx, trace, layout);
+}
+</script>
+
+  <!-- Model.SHAP charts -->
+<script>
+var footer = JSON.parse($(`#meta_shap`).data('description').replace(/'/g, '"'));
+var features = footer['features']
+var ctx = document.getElementById(`shap_mean`);
+var trace1 = {
+  x: footer['mean_train'][1],
+  y: footer['mean_train'][0],
+  orientation: 'h',
+  type: 'bar',
+  name: 'train',
+  marker: {color: 'rgb(167, 158, 225)',},
+};
+var trace2 = {
+  x: footer['mean_test'][1],
+  y: footer['mean_test'][0],
+  orientation: 'h',
+  type: 'bar',
+  name: 'test',
+  marker: {color: 'rgb(158, 210, 225)',},
+  
+};
+var trace = [trace1, trace2]
+var layout = {
+  margin: {l: 200},
+  title: `Mean SHAP values`, 
+};
+
+Plotly.newPlot(ctx, trace, layout);
+
+var buttons = []
+var marker = {color: "rgba(158, 202, 225, 0.5)", line: {color:  "rgba(158, 202, 225, 1)", width: 1}}
+for (feat of features){
+  var marker_train = {color: footer[`${feat}_train`][0], colorbar: {title: {text: feat, side: 'right',}, thickness : 20}};
+  var marker_test = {color: footer[`${feat}_test`][0], colorbar: {title: {text: feat, side: 'right',}, thickness : 20}};
+  buttons.push({
+              method: 'restyle',
+              args: ['marker', [marker_train, marker, marker_test, marker]],
+              label: feat
+          });
+}
+
+for (feat of features){
+  var ctx = document.getElementById(`shap_${feat}`);
+  var trace1 = {
+    x: footer[`${feat}_train`][0],
+    y: footer[`${feat}_train`][1],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'feature shap train',
+    marker: {
+      color: footer[`${features[0]}_train`][0], 
+      colorbar: {
+        title: features[0],
+        titleside: 'top',
+      }, 
+    }, 
+    visible: true
+    };
+
+  var trace1_1 = {
+    x: footer[`${feat}_train`][0],
+    type: 'histogram',
+    opacity: 0.5,
+    marker: {
+      color: "rgba(158, 202, 225, 0.5)", 
+      line: {
+        color:  "rgba(158, 202, 225, 1)", 
+        width: 1
+      }
+    },
+    yaxis: 'y2',
+    name: 'distribution',
+    visible: true
+  };
+
+  var trace2 = {
+    x: footer[`${feat}_test`][0],
+    y: footer[`${feat}_test`][1],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'feature shap test',
+    marker: {
+      color: footer[`${features[0]}_test`][0], 
+      colorbar: {
+        title: features[0],
+        titleside: 'top',
+      }, 
+    }, 
+    visible: false
+  };
+
+  var trace2_1 = {
+    x: footer[`${feat}_test`][0],
+    type: 'histogram',
+    opacity: 0.7,
+    marker: {
+      color: "rgba(158, 202, 225, 0.5)", 
+      line: {
+        color:  "rgba(158, 202, 225, 1)", 
+        width: 1
+      }
+    },  
+    yaxis: 'y2',
+    name: 'distribution',
+    visible: false
+  };
+
+  var trace = [trace1, trace1_1, trace2, trace2_1];
+  var layout = {
+      autosize: false,
+      width: 1000,
+      height: 800,
+      title: `${feat} SHAP values`, 
+      xaxis: {title: `${feat}`}, 
+      yaxis: {
+        title: "SHAP",
+        domain: [0, 0.85], 
+      },
+      yaxis2: {
+        domain: [0.85, 1], 
+        showgrid: false, 
+        zeroline: false,
+        side: 'right',
+      }, 
+      showlegend: false,
+      updatemenus: [{
+          x: -0.3,
+          xanchor: 'left',
+          y: 1,
+          yanchor: 'top',
+          buttons: [{
+              method: 'restyle',
+              args: ['visible', [true, true, false, false]],
+              label: 'train'
+          }, {
+              method: 'restyle',
+              args: ['visible', [false, false, true, true]],
+              label: 'test'
+          },]
+      },{
+          x: -0.4,
+          xanchor: 'left',
+          y: 0.9,
+          yanchor: 'top',
+          buttons: buttons,
+          }
+    ]
+};
+
+  Plotly.newPlot(ctx, trace, layout);
+}
+</script>
+
+  <!-- Explain instance charts -->
+<script>
+var footer = JSON.parse($(`#meta_instance`).data('description').replace(/'/g, '"'));
+var ctx = document.getElementById(`shap_waterfall`);
+var trace1 = [{
+  type: "waterfall",
+  orientation: "h",
+  measure: ['shap_waterfall'][2],
+  x: footer['shap_waterfall'][0],
+  y: footer['shap_waterfall'][1]
+}];
+var layout = {
+  margin: {l: 200},
+  title: `SHAP Waterfall`, 
+};
+Plotly.newPlot(ctx, trace1, layout);
+
+var ctx = document.getElementById(`lime`);
+var trace1 = [{
+  x: footer['lime'][1],
+  y: footer['lime'][0],
+  text: footer['lime'][2],
+  orientation: 'h',
+  type: 'bar',
+}];
+var layout = {
+  margin: {l: 300},
+  title: `Lime for the predicted value ${footer['lime'][3]}`, 
+};
+Plotly.newPlot(ctx, trace1, layout);
+</script>
+
+<!-- Dataset description Y class/reg charts -->
+<script>
+var chart_type = $(`#meta_type`).data('description');
+var task = $(`#meta_task`).data('description');
+
+var canvasDict = {};
+if (chart_type == 'dataset') {
+  canvasDict['chart_y'] = ['index_y', 'data_y'];
+
+} else {
+  canvasDict['chart_y_train'] = ['index_train', 'data_train'];
+  canvasDict['chart_y_test'] = ['index_test', 'data_test'];
+}
+
+for (let chart in canvasDict) {
+  var data_Y = $(`#${canvasDict[chart][1]}`).data('description');
+  if (task == 'class') {
+    var ctx = document.getElementById(chart).getContext('2d');
+    var strIndex = $(`#${canvasDict[chart][0]}`).data('description');
+    strIndex = strIndex.replace(/'/g, '"');
+    var index_yData = JSON.parse(strIndex)
+    var myChart = new Chart(ctx, { 
+          type: 'pie',
+          data: {
+              labels: index_yData,
+              datasets: [{
+                  label: 'Dataset 1',
+                  data: data_Y,
+                  backgroundColor: CHART_COLORS,
+              }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+                },
+              },
+          },
+      });
+  } else {
+    var graphDiv = document.getElementById(chart)
+    var index_yData = $(`#${canvasDict[chart][0]}`).data('description');
+    
+    var trace1 = [{
+      x: data_Y,
+      type: 'histogram',
+      marker: {
+        color: "rgba(255, 100, 102, 0.7)", 
+        line: {
+        color:  "rgba(255, 100, 102, 1)", 
+         width: 1
+        }
+      },  
+    }];
+    var layout = {
+      title: "Y distribution", 
+      xaxis: {title: "Value"}, 
+      yaxis: {title: "Count"}
+    };
+    Plotly.newPlot(graphDiv, trace1, layout);
+  }
+}
+</script>
+
+<!-- Models comparison -->
+
+  <!-- Metrics chart -->
+<script>
+for (let data_type of ['train', 'test']){
+  var footer = JSON.parse($(`#meta_compare_metrics_${data_type}`).data('description').replace(/'/g, '"'));
+
+  var chart_name = `metrics_chart_${data_type}`
+  var compare_metrics = footer['models'];
+  var compare_labels = footer['labels'];
+
+  var datasets = [];
+  var i = 0;
+  for (let model of compare_metrics){
+    var color = Math.floor(Math.random() * 16);
+    var metric_dict = {
+      label: model,
+      data: footer[model],
+      backgroundColor: CHART_COLORS[color],
+      stack: `Stack ${i}`
+    };
+    i+=1
+    datasets.push(metric_dict);
+  }
+  var ctx = document.getElementById(`comparison_${data_type}`).getContext('2d');
+  let chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        datasets: datasets,
+        labels: compare_labels
+    },
+    options: {
+      responsive: true,
+      scales: {
+      x: {
+        stacked: true,
+      }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Metrics'
+        }
+      }
+    },
+  });
+}
+</script>
+
+  <!-- Predict groups chart -->
+<script>
+  for (let data_type of ['train', 'test']){
+    var footer = JSON.parse($(`#meta_compare_pr_gr_${data_type}`).data('description').replace(/'/g, '"'));
+  
+    for (let model of footer['models_names']){
+      var graphDiv = document.getElementById(`models_comparison_${model}_${data_type}`);
+      var model_count = footer[`${model}_count`];
+      var model_bins = footer[`${model}_bins`];
+      var trace1 = {
+        x: footer[model][0],
+        y: model_count,
+        name: model,
+        text: model_bins,
+        textposition: 'none',
+        type: 'bar',
+        yaxis: 'y2',
+        marker: {
+          color: "rgba(157, 245, 242, 0.3)", 
+          line: {
+          color:  "rgba(157, 245, 242, 1)", 
+           width: 1
+          }
+        },  
+      };
+      
+      var trace = [trace1]
+  
+      for (let model of footer['models_names']) {
+        var trace_model = {
+          x: footer[model][0],
+          y: footer[model][1],
+          mode: 'lines+markers',
+          name: model
+        }
+        trace.push(trace_model)
+      }
+
+      var trace_model = {
+          x: footer['diag'][0],
+          y: footer['diag'][1],
+          mode: 'lines',
+          name: 'diag'
+        }
+      trace.push(trace_model)
+
+      var layout = {
+        autosize: false,
+        width: 1100,
+        height: 500,
+        xaxis: {title: `Mean in ${model} group`}, 
+        yaxis: {title: 'Fact'},
+        yaxis2: {
+          title: "Count",
+          overlaying: 'y',
+          side: 'right'}
+      };
+
+      var config = {responsive: true}
+      Plotly.newPlot(graphDiv, trace, layout, config);
+    }
+  
+  }
+  </script>
+
+  <!-- Difference chart -->
+<script>
+  for (let data_type of ['train', 'test']){
+    var footer = JSON.parse($(`#meta_compare_diff_${data_type}`).data('description').replace(/'/g, '"'));
+    var main_model = footer['main_model']
+
+    for (let model of footer['models_names']){
+      var graphDiv = document.getElementById(`models_diff_comparison_${model}_${data_type}`);
+      var model_count = footer[`count_${model}`];
+      var diff_model = footer[`diff_model_${model}`]
+      var diff_fact = footer[`diff_fact_${model}`];
+      var model_bins = footer[`${model}_bins`];
+      
+      var trace1 = {
+        x: diff_model,
+        y: model_count,
+        name: 'count',
+        text: model_bins,
+        textposition: 'none',
+        type: 'bar',
+        yaxis: 'y2',
+        marker: {
+          color: "rgba(157, 245, 242, 0.3)", 
+          line: {
+          color:  "rgba(157, 245, 242, 1)", 
+           width: 1
+          }
+        },  
+      };
+
+      var trace = [trace1]
+      for (let model of footer['models_names']) {
+        var trace_model = {
+          x: footer[`diff_model_${model}`],
+          y: footer[`diff_fact_${model}`],
+          mode: 'lines+markers',
+          name: `diff ${main_model} and ${model}`
+        }
+        trace.push(trace_model)
+      }
+      var trace_model = {
+        x: diff_model,
+        y: diff_fact,
+        mode: 'lines+markers',
+        name: `diff ${model} and ${main_model}`
+      }
+
+      
+
+      var layout = {
+        autosize: false,
+        width: 1100,
+        height: 500,
+        xaxis: {title: `Difference between ${main_model} and ${model}`}, 
+        yaxis: {title: `Difference between ${main_model} and fact`},
+        yaxis2: {
+          title: 'Count',
+          overlaying: 'y',
+          side: 'right'}
+        };
+
+      var config = {responsive: true}
+      Plotly.newPlot(graphDiv, trace, layout, config);
+  }
+    
+  }
+</script>
+
+  <!-- Features chart -->
+<script>
+for (let data_type of ['train', 'test']){
+  var footer = JSON.parse($(`#meta_compare_features_${data_type}`).data('description').replace(/'/g, '"'));
+
+  for (let feature of footer['features_names']){
+    var graphDiv = document.getElementById(`features_comparison_${feature}_${data_type}`);
+    var feature_count = footer[`${feature}_count`];
+    var feature_bins = footer[`${feature}_bins`];
+    var trace1 = {
+      x: feature_bins,
+      y: feature_count,
+      yaxis: 'y2',
+      name: 'feature',
+      type: 'bar',
+      marker: {
+        color: "rgba(157, 245, 242, 0.3)", 
+        line: {
+        color:  "rgba(157, 245, 242, 1)", 
+         width: 1
+        }
+      },  
+    };
+    
+    var trace = [trace1]
+
+    for (let model of footer['models']) {
+      var trace_model = {
+        x: feature_bins,
+        y: footer[feature][model],
+        mode: 'lines+markers',
+        name: model
+      }
+      trace.push(trace_model)
+    }
+
+    var layout = {
+      title: `${feature}`,
+      autosize: false,
+      width: 1100,
+      height: 500,
+      xaxis: {title: "Group"}, 
+      yaxis: {title: "Prediction"},
+      yaxis2: {
+        title: 'Count',
+        overlaying: 'y',
+        side: 'right'}
+    };
+    var config = {responsive: true}
+    Plotly.newPlot(graphDiv, trace, layout, config);
+  }
+
+}
+</script>
+
+
+</html>
+
+
